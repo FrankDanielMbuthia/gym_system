@@ -2,41 +2,197 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #1f2937;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: #111827;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 5px 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: #3b82f6;
+            color: white;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .danger-btn {
+            background: #10b981;
+        }
+
+        .danger-btn:hover {
+            background: #059669;
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        /* REPORT CARD */
+        .report-card {
+            background: #ffffff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* GRID (Revenue etc) */
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            padding: 20px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            text-align: center;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .total-box {
+            background: #2563eb;
+            color: white;
+        }
+
+        .total-box .stat-value {
+            color: white;
+        }
+
+        /* 🔥 ACTIVE MEMBERS TABLE */
+        .member-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .member-table th, .member-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .member-table th {
+            background: #f9fafb;
+            color: #374151;
+        }
+
+        .member-count {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+
+    </style>
 </head>
+
 <body>
 
-<h2>Admin Reports</h2>
+<div class="container">
 
-<button onclick="getAttendance()">Daily Attendance</button>
-<button onclick="getRevenue()">Revenue</button>
+    <h2>Admin Dashboard</h2>
 
-<pre id="output"></pre>
+    <!-- MEMBERSHIP -->
+    <div class="section">
+        <h3>Membership Management</h3>
 
-<script>
-const token = localStorage.getItem("access");
+        <input type="email" id="email" placeholder="User Email" />
+        <input type="text" id="plan_name" placeholder="Plan Name (Weekly, Monthly...)" />
 
-async function getAttendance() {
-    const res = await fetch("http://127.0.0.1:8000/reports/attendance/daily/", {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
+        <br>
 
-    const data = await res.json();
-    document.getElementById("output").textContent = JSON.stringify(data, null, 2);
-}
+        <button onclick="activateMembership()">Activate Membership</button>
 
-async function getRevenue() {
-    const res = await fetch("http://127.0.0.1:8000/reports/revenue/", {
-        headers: {
-            "Authorization": "Bearer " + token
-        }
-    });
+        <p id="membership_msg" class="msg"></p>
+    </div>
 
-    const data = await res.json();
-    document.getElementById("output").textContent = JSON.stringify(data, null, 2);
-}
-</script>
+    <!-- DAY PASS -->
+    <div class="section">
+        <h3>Day Pass Management</h3>
+
+        <input type="text" id="dp_name" placeholder="Customer Name" />
+        <input type="number" id="dp_price" placeholder="Price" />
+
+        <br>
+
+        <button class="danger-btn" onclick="createDayPass()">Create Day Pass</button>
+
+        <p id="dp_message" class="msg"></p>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="section">
+        <h3>Reports</h3>
+
+        <button onclick="getAttendance()">Daily Attendance</button>
+        <button onclick="getRevenue()">Revenue</button>
+        <button onclick="getActiveMembers()">Active Members</button>
+        <button onclick="getMembershipStatus()">Membership Status</button>
+
+        <div id="report_container"></div>
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
 
 </body>
 </html>

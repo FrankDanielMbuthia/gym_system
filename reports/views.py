@@ -5,30 +5,29 @@ from rest_framework.permissions import IsAdminUser
 from .services import ReportService
 
 
-class DailyAttendanceReportView(APIView):
+class DailyAttendanceView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        data = ReportService.get_daily_attendance()
-        return Response(data)
-    
+        return Response(ReportService.get_daily_attendance())
+
+
 class RevenueReportView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        data = ReportService.get_revenue_report()
-        return Response(data)
-    
-class ActiveMembersReportView(APIView):
+        return Response(ReportService.get_revenue())
+
+
+class ActiveMembersView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        data = ReportService.get_active_members()
-        return Response(data)
-    
-class MembershipStatusReportView(APIView):
+        return Response(ReportService.get_active_members())
+
+
+class MembershipStatusView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        data = ReportService.get_membership_status()
-        return Response(data)
+        return Response(ReportService.get_membership_status())

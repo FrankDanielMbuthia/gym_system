@@ -7,17 +7,21 @@ from accounts.models import User
 class MembershipService:
 
     @staticmethod
-    def activate_membership(user_id, plan_id):
+    def activate_membership(email, plan_name):
+
+        # Get user
         try:
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise ValidationError({"detail": "User not found."})
 
+        # Get plan by name
         try:
-            plan = MembershipPlan.objects.get(id=plan_id)
+            plan = MembershipPlan.objects.get(name=plan_name)
         except MembershipPlan.DoesNotExist:
             raise ValidationError({"detail": "Plan not found."})
 
+        # Check existing membership
         latest_membership = Membership.objects.filter(user=user).order_by("-end_date").first()
 
         if latest_membership and latest_membership.is_valid():
@@ -33,9 +37,10 @@ class MembershipService:
             plan=plan,
             start_date=start_date,
             end_date=end_date,
-            is_active=True  
+            is_active=True
         )
 
+        # Activate user
         user.is_active = True
         user.save()
 

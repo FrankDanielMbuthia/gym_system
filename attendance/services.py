@@ -2,21 +2,25 @@ from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from django.db import IntegrityError
 
-from .models import Attendance
+from .models import Attendance, DayPass
 from memberships.models import Membership
 
-from .models import DayPass
 
 class DayPassService:
 
     @staticmethod
-    def create_day_pass(user, price):
+    def create_day_pass(name, price):
         today = timezone.now().date()
 
-        if DayPass.objects.filter(user=user, date=today).exists():
+        if DayPass.objects.filter(name=name, date=today).exists():
             raise ValidationError({"detail": "Day pass already exists for today."})
 
-        return DayPass.objects.create(user=user, price=price)
+        day_pass = DayPass.objects.create(name=name, price=price)
+
+        Attendance.objects.create(day_pass=day_pass)
+
+        return day_pass
+
 
 class AttendanceService:
 
@@ -29,12 +33,9 @@ class AttendanceService:
         today = timezone.now().date()
 
         membership = Membership.objects.filter(user=user).order_by("-end_date").first()
-        has_valid_membership = membership and membership.is_valid()
 
-        has_day_pass = DayPass.objects.filter(user=user, date=today).exists()
-
-        if not (has_valid_membership or has_day_pass):
-            raise ValidationError({"detail": "No valid membership or day pass."})
+        if not membership or not membership.is_valid():
+            raise ValidationError({"detail": "No valid membership found."})
 
         already_checked_in = Attendance.objects.filter(
             user=user,
@@ -43,7 +44,6 @@ class AttendanceService:
 
         if already_checked_in:
             raise ValidationError({"detail": "User has already checked in today."})
-
 
         try:
             attendance = Attendance.objects.create(user=user)

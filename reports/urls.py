@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import DailyAttendanceReportView, RevenueReportView, ActiveMembersReportView, MembershipStatusReportView
+from .views import (DailyAttendanceView, RevenueReportView, ActiveMembersView, MembershipStatusView)
 
 urlpatterns = [
-    path("attendance/daily/", DailyAttendanceReportView.as_view()),
+    path("attendance/daily/", DailyAttendanceView.as_view()),
     path("revenue/", RevenueReportView.as_view()),
-    path("members/active/", ActiveMembersReportView.as_view()),
-    path("memberships/status/", MembershipStatusReportView.as_view()),
+    path("active-members/", ActiveMembersView.as_view()),
+    path("membership-status/", MembershipStatusView.as_view()),
 ]

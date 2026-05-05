@@ -1,15 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 500px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .status {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .active {
+            color: #22c55e;
+        }
+
+        .inactive {
+            color: #ef4444;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 5px;
+            background: #3b82f6;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Dashboard</h2>
+<h2>🏋️ Gym Dashboard</h2>
 
-<button id="checkinBtn">Check In</button>
+<div class="card">
+    <h3>👤 User Info</h3>
+    <p id="username">Username: ...</p>
+    <p id="email">Email: ...</p>
+</div>
 
-<script src="js/api.js"></script>
+<div class="card">
+    <h3>💳 Membership</h3>
+    <p id="membership_status" class="status">Status: ...</p>
+    <p id="plan">Plan: ...</p>
+    <p id="end_date">End Date: ...</p>
+    <p id="days_left">Days Remaining: ...</p>
+</div>
+
+<div class="card">
+    <h3>📅 Today</h3>
+    <p id="checkin_status">Check-in: Not checked in</p>
+    <button id="checkinBtn">Check In</button>
+</div>
+
+<script src="js/dashboard.js"></script>
 
 </body>
 </html>
